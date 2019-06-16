@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Multistep web form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="./jquery.datetimepicker.min.css"/>
+    <link href="imageuploadify.min.css" rel="stylesheet">
+    <!-- Include SmartWizard CSS -->
+    <link href="smart_wizard.min.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<style>
+    body{
+        background-color: #f6f6f6;
+    }
+    #smartwizard{
+        background: #fff;
+    }
+    .with-errors{
+        font-size: 10px;
+        color: red;
+        padding: 5px 0;
+    }
+    .nav-link{
+        padding: 0.9rem 1.3rem;
+    }
+    .sw-theme-default > ul.step-anchor > li > a::after{
+        height: 3px;
+    }
+    .form-control[readonly]{
+        background-color: #fff;
+    }
+    .inner-input-group{
+        background: transparent;
+        border-right: 0;
+    }
+    .material-switch > input[type="checkbox"] {
+        display: none;   
+    }
+
+    .material-switch > label {
+        cursor: pointer;
+        height: 0px;
+        position: relative; 
+        width: 40px;  
+    }
+
+    .material-switch > label::before {
+        background: rgb(0, 0, 0);
+        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        content: '';
+        height: 16px;
+        margin-top: -8px;
+        position:absolute;
+        opacity: 0.3;
+        transition: all 0.4s ease-in-out;
+        width: 40px;
+    }
+    .material-switch > label::after {
+        background: rgb(255, 255, 255);
+        border-radius: 16px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+        content: '';
+        height: 24px;
+        left: -4px;
+        margin-top: -8px;
+        position: absolute;
+        top: -4px;
+        transition: all 0.3s ease-in-out;
+        width: 24px;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::before {
+        background: inherit;
+        opacity: 0.5;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::after {
+        background: inherit;
+        left: 20px;
+    }
+    .material-switch > label {
+    cursor: pointer;
+    height: 0px;
+    position: relative;
+    width: 40px;
+}
+    .label-primary {
+    background-color: #428bca;
+}
+
+
+.range {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  margin-top: 10px;
+}
+
+.range input {
+  width: 100%;
+  position: absolute;
+  top: 2px;
+  height: 0;
+  -webkit-appearance: none;
+}
+.range input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #37adbf;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #37adbf;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-ms-thumb {
+  width: 18px;
+  height: 18px;
+  margin: -8px 0  0;
+  border-radius: 50%;
+  background: #37adbf;
+  cursor: pointer;
+  border: 0 !important;
+}
+.range input::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input::-moz-range-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input::-ms-track {
+  width: 100%;
+  height: 2px;
+  cursor: pointer;
+  background: #b2b2b2;
+}
+.range input:focus {
+  background: none;
+  outline: none;
+}
+.range input::-ms-track {
+  width: 100%;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+.range-labels {
+  margin: 18px -25px 0;
+  padding: 0;
+  list-style: none;
+}
+.range-labels li {
+  position: relative;
+  float: left;
+  width: 20%;
+  text-align: center;
+  color: #b2b2b2;
+  font-size: 14px;
+  cursor: pointer;
+}
+.range-labels li::before {
+  position: absolute;
+  top: -25px;
+  right: 0;
+  left: 0;
+  content: "";
+  margin: 0 auto;
+  width: 9px;
+  height: 9px;
+  background: #b2b2b2;
+  border-radius: 50%;
+}
+.range-labels .active {
+  color: #37adbf;
+}
+.range-labels .selected::before {
+  background: #37adbf;
+}
+.range-labels .active.selected::before {
+  display: none;
+}
+
+.input-group-text {
+    cursor: pointer
+}
+.imageuploadify .imageuploadify-images-list i{
+  display: none;
+}
+.imageuploadify{
+  min-height: auto;
+}
+.imageuploadify .imageuploadify-images-list span.imageuploadify-message{
+  font-size: 16px;
+  margin-top: 20px;
+}
+.checkbox-table td{
+  height: 135px;
+}
+</style>
+
+<body>
+    <div class="container">
+        <br />
+        <form action="#" id="myForm" role="form" class="rounded-0 shadow-sm" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            <!-- SmartWizard html -->
+            <div id="smartwizard" class="rounded-0">
+                <ul>
+                    <li>
+                        <a href="#step-1">Start Survey
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-2">Step 2
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#step-3">Step 3
+                        </a>
+                    </li>
+                    <!-- <li>
+                        <a href="#step-4">Step 4
+                        </a>
+                    </li> -->
+                </ul>
+
+                <div>
+                    <div id="step-1">
+                        <div id="form-step-0" role="form" data-toggle="validator">
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <label for="email">Survey Short Name</label>
+                                <input type="text" class="form-control rounded-0 shadow-sm" name="name" id="name" placeholder="" required>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label for="email">Survey Description</label>
+                                <input type="text" class="form-control rounded-0 shadow-sm" name="description" id="description" placeholder="" required>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-2">
+                                    <label for="email">Number of Questions</label>
+                                <div class="input-group shadow-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text rounded-0" id="minusBtn">-</span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 text-center border-right-0" id="qNumbers" placeholder="" value="0" readonly="readonly" aria-label="Recipient's username">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text rounded-0" id="plusBtn">+</span>
+                                  </div>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Survey Start Date</label>
+                                <div class="input-group shadow-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text inner-input-group rounded-0" id="basic-addon2">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 border-left-0" id="datetimepicker" placeholder="YY-MM-DD" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Survey End Date</label>
+                                <div class="input-group shadow-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text inner-input-group rounded-0" id="basic-addon2">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 border-left-0" placeholder="YY-MM-DD" id="datetimepicker1" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Create Date</label>
+                                <div class="input-group shadow-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text inner-input-group rounded-0" id="basic-addon2">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 border-left-0" id="datetimepicker2" placeholder="YY-MM-DD" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-2">
+                                    <label for="email">Survey Responce Goal</label>
+                                <div class="input-group shadow-sm ">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text rounded-0" id="minus-btn">-</span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 text-center border-right-0" id="respGoal" placeholder="" value="0" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text rounded-0" id="plus-btn">+</span>
+                                  </div>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Survey Start Time</label>
+                                <div class="input-group shadow-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text inner-input-group rounded-0" id="basic-addon2">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 border-left-0" id="timePicker1" placeholder="HH:MM" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Survey End Time</label>
+                                <div class="input-group shadow-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text inner-input-group rounded-0" id="basic-addon2">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                  </div>
+                                  <input type="text" class="form-control rounded-0 border-left-0" id="timePicker2" placeholder="HH:MM" readonly="readonly" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Trunk</label>
+                                <select name="" id="" class="form-control shadow-sm rounded-0"></select>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-2">
+                                    <label for="email">Use Survey Skip Logic</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="material-switch pull-right d-inline-block">
+                                        <input id="skipLogic" name="someSwitchOption001" type="checkbox"/>
+                                        <label for="skipLogic" class="label-primary"></label>
+                                    </div>
+                                    <span class="ml-3" data-toggle="tooltip" data-placement="top" title="Tooltip on top"><i class="fas fa-question-circle"></i></span>
+                                    </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Enable AMD</label>
+                                    <div class="d-flex align-items-center">
+                                        <div class="material-switch pull-right d-inline-block">
+                                        <input id="enableAMD" name="someSwitchOption001" type="checkbox"/>
+                                        <label for="enableAMD" class="label-primary"></label>
+                                    </div>
+                                    <span class="ml-3" data-toggle="tooltip" data-placement="top" title="Tooltip on top"><i class="fas fa-question-circle"></i></span>
+                                    </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Survey End Time</label>
+                                    <input type="range" class="custom-range" min="1" max="5" step="1" id="ex6" value="1" data-toggle="tooltip" data-placement="top">
+                                    
+                                    <div class="d-flex justify-content-between">
+                                    <label>1</label>
+                                    <label>2</label>
+                                    <label>3</label>
+                                    <label>4</label>
+                                    <label>5</label>
+                                </div>
+                                <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="email">Channels</label>
+                                <input type="range" class="custom-range" min="0" max="20" step="10" id="ex6" value="1" data-toggle="tooltip" data-placement="top">
+                                <div class="d-flex justify-content-between">
+                                    <label>0</label>
+                                    <label>10</label>
+                                    <label>20</label>
+                                </div>
+                                        <!-- <span>Current Slider Value: <span id="ex6Val"></span></span> -->
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <label for="email">Audio Volume</label>
+                                <input type="range" class="custom-range" min="0" max="200" step="10" id="ex6" value="1" data-toggle="tooltip" data-placement="top">
+                                <div class="d-flex justify-content-between">
+                                    <label>0</label>
+                                    <!-- <label>10</label>
+                                    <label>20</label>
+                                    <label>30</label>
+                                    <label>40</label> -->
+                                    <label>50</label>
+                                    <!-- <label>60</label>
+                                    <label>70</label>
+                                    <label>80</label>
+                                    <label>90</label> -->
+                                    <label>100</label>
+                                    <!-- <label>110</label>
+                                    <label>120</label>
+                                    <label>130</label>
+                                    <label>140</label> -->
+                                    <label>150</label>
+                                    <!-- <label>160</label>
+                                    <label>170</label>
+                                    <label>180</label>
+                                    <label>190</label> -->
+                                    <label>200</label>
+                                </div>
+                                        <!-- <span>Current Slider Value: <span id="ex6Val"></span></span> -->
+                                <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="step-2">
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label for="">Survey ID</label>
+                            <input type="text" class="form-control rounded-0 shadow-sm" placeholder="BETA0042789" readonly="readonly">
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="">Responce Tracking Question</label>
+                            <select name="" id="" class="form-control rounded-0 shadow-sm"></select>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label for="">Intro Audio File</label><small>*Audio Files Only</small>
+                            <input type="file" accept="audio/*" multiple>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="">Hangup Audio File</label><small>*Audio Files Only</small>
+                            <input type="file" accept="audio/*" multiple>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div id="step-3">
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label for="">Survey ID</label>
+                            <input type="text" class="form-control rounded-0 shadow-sm" placeholder="BETA0042789" readonly="readonly">
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="">Question Audio File</label><small>*Audio Files Only</small>
+                            <input type="file" accept="audio/*" multiple>
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-sm-6">
+                            <label for="">Questin Prompt</label>
+                            <input type="text" class="form-control rounded-0 shadow-sm" placeholder="">
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="">Question Label</label>
+                            <input type="text" class="form-control rounded-0 shadow-sm" placeholder="">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="col-sm-8 offset-sm-2">
+                            <table class="table table-bordered checkbox-table">
+                            <tr>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox" >DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox" >DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="d-flex justify-content-between flex-column">
+                                    <div class="checkbox table-checkbox">
+                                      <label for=""><input type="checkbox">DTMF 1</label>
+                                    </div>
+                                    <div class="column-options">
+                                      <label for="">Yes</label>
+                                      <select name="" id="" class="form-control"></select>
+                                    </div>
+                                  </div>
+                              </td>
+                            </tr>
+                          </table>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- <div id="step-4" class="">
+                        <h2>Terms and Conditions</h2>
+                        <p>
+                            Terms and conditions: Keep your smile :)
+                        </p>
+                        <div id="form-step-3" role="form" data-toggle="validator">
+                            <div class="form-group">
+                                <label for="terms">I agree with the T&C</label>
+                                <input type="checkbox" id="terms" data-error="Please accept the Terms and Conditions" required>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- Include jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include jQuery Validator plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!-- Include SmartWizard JavaScript source -->
+    <script type="text/javascript" src="jquery.smartWizard.min.js"></script>
+    <script src="jquery.datetimepicker.js"></script>
+
+    <script type="text/javascript" src="imageuploadify.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('input[type="file"]').imageuploadify();
+
+                //table inputs
+                if($('.table-checkbox input[type=checkbox]').is(':checked')){
+                    $('.table-checkbox input[type=checkbox]').next('div').show();
+                  } else{
+                     $('.table-checkbox input[type=checkbox]').next('div').hide();
+                  }
+                $('.column-options').hide();
+                $('.table-checkbox').on('change',function(){
+                  if($('.table-checkbox input[type=checkbox]').is(':checked') == true){
+                    $($(this)).next('div').show();
+                  } else{
+                     $($(this)).next('div').hide();
+                  }
+                })
+            })
+       
+
+
+
+$('#ex6').on('change', function(e) {
+  var id = e.target.value;
+  $('#ex6').attr('title',id);
+  // document.getElementById("ex6Val").innerHTML = id;
+});
+$('#ex6').change();
+
+
+// $('#datetimepicker').datetimepicker({
+//     yearOffset:222,
+//     lang:'ch',
+//     timepicker:false,
+//     format:'d/m/Y',
+//     formatDate:'Y/m/d',
+//     minDate:'-1970/01/02', // yesterday is minimum date
+//     maxDate:'+1970/01/02' // and tommorow is maximum date calendar
+// });
+
+</script>
+
+    <script type="text/javascript">
+    $(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+        $(document).ready(function () {
+
+$('#datetimepicker').datetimepicker({
+    lang:'en',
+    timepicker:false,
+    format:'d/m/Y',
+    formatDate:'Y/m/d',
+});
+
+$('#datetimepicker1').datetimepicker({
+    lang:'en',
+    timepicker:false,
+    format:'d/m/Y',
+    formatDate:'Y/m/d',
+});
+
+$('#datetimepicker2').datetimepicker({
+    lang:'en',
+    timepicker:false,
+    format:'d/m/Y',
+    formatDate:'Y/m/d',
+});
+
+$('#timePicker1').datetimepicker({
+    datepicker:false,
+                format:'H:i'
+});
+
+$('#timePicker2').datetimepicker({
+    datepicker:false,
+                format:'H:i'
+});
+
+
+
+            $('#qNumbers').prop('disabled', true);
+    $('#plusBtn').click(function(){
+        $('#qNumbers').val(parseInt($('#qNumbers').val()) + 1 );
+            });
+        $('#minusBtn').click(function(){
+        $('#qNumbers').val(parseInt($('#qNumbers').val()) - 1 );
+        if ($('#qNumbers').val() == 0) {
+            $('#qNumbers').val(0);
+        }
+
+            });
+
+        $('#respGoal').prop('disabled', true);
+    $('#plus-btn').click(function(){
+        $('#respGoal').val(parseInt($('#respGoal').val()) + 1 );
+            });
+        $('#minus-btn').click(function(){
+        $('#respGoal').val(parseInt($('#respGoal').val()) - 1 );
+        if ($('#respGoal').val() == 0) {
+            $('#respGoal').val(0);
+        }
+
+            });
+
+            // Toolbar extra buttons
+            var btnFinish = $('<button></button>').text('Finish')
+                .addClass('btn btn-info')
+                .on('click', function () {
+                    if (!$(this).hasClass('disabled')) {
+                        var elmForm = $("#myForm");
+                        if (elmForm) {
+                            elmForm.validator('validate');
+                            var elmErr = elmForm.find('.has-error');
+                            if (elmErr && elmErr.length > 0) {
+                                alert('Oops we still have error in the form');
+                                return false;
+                            } else {
+                                alert('Great! we are ready to submit form');
+                                elmForm.submit();
+                                return false;
+                            }
+                        }
+                    }
+                });
+            var btnCancel = $('<button></button>').text('Cancel')
+                .addClass('btn btn-danger')
+                .on('click', function () {
+                    $('#smartwizard').smartWizard("reset");
+                    $('#myForm').find("input, textarea").val("");
+                });
+
+
+
+            // Smart Wizard
+            $('#smartwizard').smartWizard({
+                selected: 0,
+                theme: 'default',
+                transitionEffect: 'fade',
+                toolbarSettings: {
+                    toolbarPosition: 'bottom',
+                    toolbarExtraButtons: [btnFinish, btnCancel]
+                },
+                anchorSettings: {
+                    markDoneStep: true, // add done css
+                    markAllPreviousStepsAsDone: true, // When a step selected by url hash, all previous steps are marked done
+                    removeDoneStepOnNavigateBack: true, // While navigate back done step after active step will be cleared
+                    enableAnchorOnDoneStep: true // Enable/Disable the done steps navigation
+                }
+            });
+
+            $("#smartwizard").on("leaveStep", function (e, anchorObject, stepNumber, stepDirection) {
+                var elmForm = $("#form-step-" + stepNumber);
+                // stepDirection === 'forward' :- this condition allows to do the form validation
+                // only on forward navigation, that makes easy navigation on backwards still do the validation when going next
+                if (stepDirection === 'forward' && elmForm) {
+                    elmForm.validator('validate');
+                    var elmErr = elmForm.children('.has-error');
+                    if (elmErr && elmErr.length > 0) {
+                        // Form validation failed
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            $("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection) {
+                // Enable finish button only on last step
+                if (stepNumber == 3) {
+                    $('.btn-finish').removeClass('disabled');
+                } else {
+                    $('.btn-finish').addClass('disabled');
+                }
+            });
+
+        });
+
+
+    </script>
+</body>
+
+</html>
